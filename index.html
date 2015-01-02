@@ -22,9 +22,9 @@
     <!-- トップページ -->
     <div data-role="page" id="top">
         <div role="main" class="ui-content">
-            <a href="#footprints" style="font-size: 300%; color: red;">あしあとを見る</a>
+            <a href="#footprints"><img src="imgs/kyoto/asiato.png" height="60px"></a>
             <div name="startButton">
-                <a href="#main"><img src="imgs/button_start.jpg"></a>
+                <a href="#main"><img src="imgs/kyoto/start.png" height="60px"></a>
             </div>
         </div>
     </div>
@@ -36,19 +36,27 @@
             <div name="destinationInfo">
                 <p><span name="direct"></span>へ</p>
                 <p>あと<span name="dist"></span>m</p>
-                <img src="imgs/low_center.png">
+                <!-- <img src="imgs/low_center.png"> -->
             </div>
 
             <!-- ヒントのリスト -->
             <ul name="hintList">
-                <li name="hint1"><a href="#jump" class="hintbutton" name="hint1"><img src="imgs/hint1.png" alt="ヒント1" ></a></li>
-                <li name="hint2"><a href="#hint" class="hintbutton" name="hint2"><img src="imgs/hint2.png" alt="ヒント2" ></a></li>
+                <li name="hint1">
+                    <a href="#jump" class="hintbutton" name="hint1">
+                        <img src="imgs/kyoto/hint1.png" alt="ヒント1" height="50px">
+                    </a>
+                </li>
+                <li name="hint2">
+                    <a href="#hint" class="hintbutton" name="hint2">
+                        <img src="imgs/kyoto/hint2.png" alt="ヒント2" height="50px">
+                    </a>
+                </li>
             </ul>
 
             <!-- 再検索ボタン -->
             <div name="researchButton">
                 <a href="#confirmDialog" data-rel="popup" data-position-to="window" data-transition="pop">
-                    <img src="imgs/button_back.jpg" name="research" height="40px">
+                    <img src="imgs/kyoto/back.png" name="research" height="50px">
                 </a>
             </div>
 
@@ -81,7 +89,7 @@
 
             <!-- 戻るボタン -->
             <div name="backButton">
-                <a href="#main"><img src="imgs/button_back.jpg" height="60px"></a>
+                <a href="#main"><img src="imgs/kyoto/back.png" height="60px"></a>
             </div>
         </div>
 
@@ -95,19 +103,30 @@
     <!-- ゴールページ -->
     <div data-role="page" id="goal">
         <div role="main" class="ui-content">
-            <h1><img src="imgs/goal.png"></h1>
+            <!-- <h1><img src="imgs/goal.png"></h1> -->
 
             <div name="placeImg">
-                <img src="imgs/01.jpg" width="50px">
+
+            </div>
+
+            <div name="placeName">
+                <p>北野天満宮宝物殿</p>
             </div>
 
             <!-- 施設の説明文 -->
-            <div name="description"></div>
+            <div name="description">
+                <p>
+                    ここは京都のお寺です．あああああああああああああああ
+                    ああああああああああああああああああああああああああ
+                    ここは京都のお寺です．あああああああああああああああ
+                    ああああああああああああああああああああああああああ
+                </p>
+            </div>
 
             <!-- タイトルボタン -->
             <div name="titleButton">
                 <a href="#titleDialog" data-rel="popup" data-position-to="window" data-transition="pop">
-                    <img src="imgs/button_back.jpg" height="40px">
+                    <img src="imgs/kyoto/back.png" height="40px">
                 </a>
             </div>
 
@@ -129,7 +148,7 @@
     <!-- あしあとページ -->
     <div data-role="page" id="footprints">
         <div role="main" class="ui-content">
-            <h1>あしあと</h1>
+            <h1><img src="imgs/kyoto/asiato.png" height="70px"></h1>
 
             <!-- あしあとリスト -->
             <ul data-role="listview">
@@ -145,7 +164,7 @@
             <!-- コンプリート率と戻るボタン -->
             <p name="complete"><span name="rate">50</span>%コンプリート</p>
             <div name="backButton">
-                <a href="#top"><img src="imgs/button_back.jpg" height="60px"></a>
+                <a href="#top"><img src="imgs/kyoto/back.png" height="60px"></a>
             </div>
         </div>
     </div>
@@ -185,11 +204,11 @@
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <a href="#commentDialog"  data-rel="popup" data-position-to="window" data-transition="pop">
-                        <img src="imgs/button_back.jpg" height="50px">
+                        <img src="imgs/kyoto/take.png" height="50px"> <!-- TODO コメントボタン -->
                     </a>
                 </div>
                 <div class="ui-block-b">
-                    <a href="#footprints"><img src="imgs/button_back.jpg" height="50px"></a>
+                    <a href="#footprints"><img src="imgs/kyoto/back.png" height="50px"></a>
                 </div>
             </div>
 

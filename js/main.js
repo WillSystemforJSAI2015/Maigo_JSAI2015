@@ -12,12 +12,12 @@ $(document).on('pageinit', '#top', function() {
             App.arriveGoals = [];
 
             console.log('Loaded JSON Data');
-            console.log(data);
+            // console.log(data);
         })
         .error(function() {
             alert('問題が発生しました．アプリを再起動してください．');
         });
-    $('#main li[name="hint2"]').css('visibility', 'hidden');
+    // $('#main li[name="hint2"]').css('visibility', 'hidden');
 
     console.log('Initialize Top Page');
 });
@@ -36,11 +36,10 @@ $(document).on('pageinit', '#main', function() {
                 i = -1;
             }
         }
-        console.log(App.homeNum);
 
         if (typeof App.geoClient !== 'undefined') {
             App.geoClient.clearWatchPosition();
-            $('#main li[name="hint2"]').css('visibility', 'hidden');
+            // $('#main li[name="hint2"]').css('visibility', 'hidden');
 
         } else {
             App.geoClient = new GeoLocation();
@@ -113,7 +112,7 @@ $(document).on('pageinit', '#jump', function() {
     $(document).on('click', "#jump", function() {
         var template = '<li name="place' + App.homeNum + '">' +
             '<a href="#detailFootprint">' +
-            '<img src="imgs/camera.jpg">' + // TODO: 画像パスに変える
+            '<img src="imgs/kyoto/camera.jpg">' + // TODO: 画像パスに変える
             '<h2>' + App.kyoto[App.homeNum]['施設名'] + '</h2>' +
             '</a></li>';
         $('#footprints').find('ul').append(template);
@@ -153,7 +152,8 @@ $(document).on('pageinit', '#goal', function() {
 });
 
 $(document).on('pageshow', '#goal', function() {
-    $(this).find('div[name="placeImg"]').html('<img src="imgs/01.jpg" width="138px" height="172">'); // TODO: App.kyotoの画像パスに変更
+    $(this).find('div[name="placeImg"]').html('<img src="imgs/01.jpg" width="165px" height="180px">'); // TODO: App.kyotoの画像パスに変更
+    $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['施設名'] + '</p>');
     $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['説明文'] + '</p>');
 
     console.log('Loaded Goal Page');
@@ -169,9 +169,9 @@ $(document).on('pageinit', '#footprints', function() {
 
                 if (App.arriveGoals[App.arriveGoals.length - 1]['photo'] !== '') {
                     $('#detailFootprint div[name="placeImg"]')
-                        .html('<img src="' + App.arriveGoals[i]['photo'] + '" alt="カメラ" height="120">');
+                        .html('<img src="' + App.arriveGoals[i]['photo'] + '" height="120">');
                 } else {
-                    $('#detailFootprint div[name="placeImg"]').html('<img src="./imgs/01.jpg" alt="カメラ" height="120">');
+                    $('#detailFootprint div[name="placeImg"]').html('<img src="./imgs/kyoto/camera.jpg" alt="カメラ" height="120">');
                 }
                 $('#detailFootprint div[name="description"]').html('<p>' + App.kyoto[App.currentPlace]['説明文'] + '</p>');
                 $('#detailFootprint div[name="comment"]').html('<p>' + App.arriveGoals[i]['comment'] + '</p>');
