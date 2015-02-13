@@ -120,7 +120,8 @@ $(document).on('pageinit', '#jump', function() {
         App.arriveGoals.push({
             'num': App.homeNum,
             'comment': '',
-            'photo': ''
+            'photo': '',
+            'day': ''
         });
 
         var activity = new MozActivity({
@@ -134,7 +135,15 @@ $(document).on('pageinit', '#jump', function() {
             console.log('SUCCESS(activity): ', this.result);
             var imgSrc = window.URL.createObjectURL(this.result.blob);
             App.arriveGoals[App.arriveGoals.length - 1]['photo'] = imgSrc;
-            // $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+            $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+
+            var now = new Date();
+            var yobi= ["日","月","火","水","木","金","土"];
+            var day = now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影';
+            App.arriveGoals[App.arriveGoals.length - 1]['day'] = day;
+            $('#detailFootprint div[name="pictureDay"]')
+                .html('<p>' + day + '</p>');
+
             window.location.href = '#goal';
         };
 
@@ -231,8 +240,11 @@ $(document).on('pageinit', '#detailFootprint', function() {
 
                     var now = new Date();
                     var yobi= ["日","月","火","水","木","金","土"];
+                    var day = now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影';
+                    App.arriveGoals[App.arriveGoals.length - 1]['day'] = day;
                     $('#detailFootprint div[name="pictureDay"]')
-                        .html('<p>' + now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影</p>');
+                        .html('<p>' + day + '</p>');
+
                     break;
                 }
             }
