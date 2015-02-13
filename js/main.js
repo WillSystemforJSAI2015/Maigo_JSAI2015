@@ -3,7 +3,7 @@ var PRECISION = 1;
 
 $(document).on('pageinit', '#top', function() {
     $.ajax({
-            url: 'csvData/kyoto.json',
+            url: 'csvData/new_kyoto.json',
             type: 'GET',
             dataType: 'json'
         })
@@ -85,8 +85,8 @@ $(document).on('pageinit', '#main', function() {
     $(document).on('click', ".hintbutton", function() {
         var count = 1;
         var hinttxt = { //ヒントのレベル別オブジェクトを作成
-            'hint1': App.kyoto[App.homeNum]['ヒント1'],
-            'hint2': App.kyoto[App.homeNum]['ヒント3'],
+            'hint1': App.kyoto[App.homeNum]['hint1'],
+            'hint2': App.kyoto[App.homeNum]['hint2'],
         };
 
         for (var key in hinttxt) {
@@ -113,7 +113,7 @@ $(document).on('pageinit', '#jump', function() {
         var template = '<li name="place' + App.homeNum + '">' +
             '<a href="#detailFootprint">' +
             '<img src="imgs/kyoto/camera.jpg">' + // TODO: 画像パスに変える
-            '<h2>' + App.kyoto[App.homeNum]['施設名'] + '</h2>' +
+            '<h2>' + App.kyoto[App.homeNum]['goal'] + '</h2>' +
             '</a></li>';
         $('#footprints').find('ul').append(template);
 
@@ -123,12 +123,6 @@ $(document).on('pageinit', '#jump', function() {
             'photo': ''
         });
 
-        window.location.href = '#goal';
-    });
-});
-
-$(document).on('pageinit', '#goal', function() {
-    $('#titleDialog a[href="#footprints"]').on('click', function() {
         var activity = new MozActivity({
             name: 'pick',
             data: {
@@ -140,21 +134,44 @@ $(document).on('pageinit', '#goal', function() {
             console.log('SUCCESS(activity): ', this.result);
             var imgSrc = window.URL.createObjectURL(this.result.blob);
             App.arriveGoals[App.arriveGoals.length - 1]['photo'] = imgSrc;
-            $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+            // $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+            window.location.href = '#goal';
         };
 
         activity.onerror = function() {
             console.error('ERROR(activity):', this.error);
         };
     });
+});
+
+$(document).on('pageinit', '#goal', function() {
+    // $('#titleDialog a[href="#footprints"]').on('click', function() {
+    //     var activity = new MozActivity({
+    //         name: 'pick',
+    //         data: {
+    //             type: 'image/jpeg'
+    //         }
+    //     });
+
+    //     activity.onsuccess = function() {
+    //         console.log('SUCCESS(activity): ', this.result);
+    //         var imgSrc = window.URL.createObjectURL(this.result.blob);
+    //         App.arriveGoals[App.arriveGoals.length - 1]['photo'] = imgSrc;
+    //         $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+    //     };
+
+    //     activity.onerror = function() {
+    //         console.error('ERROR(activity):', this.error);
+    //     };
+    // });
 
     console.log('Loaded Goal Page');
 });
 
 $(document).on('pageshow', '#goal', function() {
     $(this).find('div[name="placeImg"]').html('<img src="imgs/01.jpg" width="165px" height="180px">'); // TODO: App.kyotoの画像パスに変更
-    $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['施設名'] + '</p>');
-    $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['説明文'] + '</p>');
+    $(this).find('div[name="placeName"]').html('<p>' + App.kyoto[App.homeNum]['goal'] + '</p>');
+    $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['information'] + '</p>');
 
     console.log('Loaded Goal Page');
 });
@@ -173,7 +190,7 @@ $(document).on('pageinit', '#footprints', function() {
                 } else {
                     $('#detailFootprint div[name="placeImg"]').html('<img src="./imgs/kyoto/camera.jpg" alt="カメラ" height="120">');
                 }
-                $('#detailFootprint div[name="description"]').html('<p>' + App.kyoto[App.currentPlace]['説明文'] + '</p>');
+                $('#detailFootprint div[name="description"]').html('<p>' + App.kyoto[App.currentPlace]['information'] + '</p>');
                 $('#detailFootprint div[name="comment"]').html('<p>' + App.arriveGoals[i]['comment'] + '</p>');
 
                 break;
