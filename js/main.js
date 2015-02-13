@@ -112,7 +112,7 @@ $(document).on('pageinit', '#jump', function() {
     $(document).on('click', "#jump", function() {
         var template = '<li name="place' + App.homeNum + '">' +
             '<a href="#detailFootprint">' +
-            '<img src="imgs/kyoto/camera.jpg">' + // TODO: 画像パスに変える
+            '<img src="imgs/arashiyama/' + App.kyoto[App.homeNum]['picture_pass'] + '.jpg">' +
             '<h2>' + App.kyoto[App.homeNum]['goal'] + '</h2>' +
             '</a></li>';
         $('#footprints').find('ul').append(template);
@@ -146,12 +146,12 @@ $(document).on('pageinit', '#jump', function() {
 
 $(document).on('pageinit', '#goal', function() {
     // $('#titleDialog a[href="#footprints"]').on('click', function() {
-    //     var activity = new MozActivity({
-    //         name: 'pick',
-    //         data: {
-    //             type: 'image/jpeg'
-    //         }
-    //     });
+    //     // var activity = new MozActivity({
+    //     //     name: 'pick',
+    //     //     data: {
+    //     //         type: 'image/jpeg'
+    //     //     }
+    //     // });
 
     //     activity.onsuccess = function() {
     //         console.log('SUCCESS(activity): ', this.result);
@@ -169,7 +169,14 @@ $(document).on('pageinit', '#goal', function() {
 });
 
 $(document).on('pageshow', '#goal', function() {
-    $(this).find('div[name="placeImg"]').html('<img src="imgs/01.jpg" width="165px" height="180px">'); // TODO: App.kyotoの画像パスに変更
+    if (App.kyoto[App.homeNum]['picture'] === '1') {
+        $(this).find('div[name="placeImg"]')
+            .html('<img src="imgs/arashiyama/' + App.kyoto[App.homeNum]['picture_pass'] + '.jpg" width="165px" height="180px">');
+    } else {
+        $(this).find('div[name="placeImg"]')
+            .html('<div width="165px" height="180px"><p>No Data</p></div>');
+    }
+
     $(this).find('div[name="placeName"]').html('<p>' + App.kyoto[App.homeNum]['goal'] + '</p>');
     $(this).find('div[name="description"]').html('<p>' + App.kyoto[App.homeNum]['information'] + '</p>');
 
@@ -221,6 +228,11 @@ $(document).on('pageinit', '#detailFootprint', function() {
                 if (App.currentPlace == App.arriveGoals[i]['num']) {
                     App.arriveGoals[i]['photo'] = imgSrc;
                     $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
+
+                    var now = new Date();
+                    var yobi= ["日","月","火","水","木","金","土"];
+                    $('#detailFootprint div[name="pictureDay"]')
+                        .html('<p>' + now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影</p>');
                     break;
                 }
             }
