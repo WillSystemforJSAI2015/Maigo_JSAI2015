@@ -5,7 +5,7 @@ $(document).on('pageinit', '#top', function() {
     /* 嵐山データの読み込み */
     $.ajax({
         // url: 'csvData/arashiyama.json',
-        url: 'csvData/debug.json'
+        url: 'csvData/debug.json',
         type: 'GET',
         dataType: 'json'
     })
@@ -44,30 +44,35 @@ $(document).on('pageinit', '#main', function() {
         App.geoClient.watchCurrentPosition(function(pos) {
             var currentLat = pos.coords.latitude;
             var currentLong = pos.coords.longitude;
+            console.log(currentLat);
+            console.log(currentLong);
+            console.log(App.kyoto[App.homeNum]['X']);
+            console.log(App.kyoto[App.homeNum]['Y']);
 
             var distance = Math.floor(App.geoClient.getGeoDistance( // 距離
-                App.kyoto[App.homeNum]['X'], App.kyoto[App.homeNum]['Y'],
+                App.kyoto[App.homeNum]['Y'], App.kyoto[App.homeNum]['X'],
                 currentLat, currentLong, PRECISION
             ));
 
             var direction = App.geoClient.getGeoDirection( // 方向
                 currentLat, currentLong,
-                App.kyoto[App.homeNum]['X'], App.kyoto[App.homeNum]['Y']
+                App.kyoto[App.homeNum]['Y'], App.kyoto[App.homeNum]['X']
             );
 
-            if (distance <= 2000) {
+            if (distance <= 200) {
                 $('#main li[name="hint2"]').css('visibility', 'visible');
             } else {
                 $('#main li[name="hint2"]').css('visibility', 'hidden');
             }
 
-            if (distance <= 500) {
+            if (distance <= 30) {
                 App.geoClient.clearWatchPosition();
                 window.location.href = '#jump';
             }
 
             $('div[name="destinationInfo"]').find('span[name="direct"]').html(direction);
             $('div[name="destinationInfo"]').find('span[name="dist"]').html(distance);
+            console.log(distance);
         });
     };
     App.setGoal();
