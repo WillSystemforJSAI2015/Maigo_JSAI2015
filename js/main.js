@@ -2,49 +2,45 @@ var App = {};
 var PRECISION = 1;
 
 $(document).on('pageinit', '#top', function() {
+    /* 嵐山データの読み込み */
     $.ajax({
-            url: 'csvData/new_kyoto.json',
-            type: 'GET',
-            dataType: 'json'
-        })
-        .success(function(data) {
-            App.kyoto = data;
-            App.arriveGoals = [];
-
-            console.log('Loaded JSON Data');
-            // console.log(data);
-        })
-        .error(function() {
-            alert('問題が発生しました．アプリを再起動してください．');
-        });
-    // $('#main li[name="hint2"]').css('visibility', 'hidden');
+        // url: 'csvData/arashiyama.json',
+        url: 'csvData/debug.json'
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        App.kyoto = data;
+        App.arriveGoals = [];
+        App.goalNums = [];
+        console.log('Loaded JSON Data');
+    })
+    .fail(function() {
+        alert('問題が発生しました．アプリを再起動してください．');
+    });
 
     console.log('Initialize Top Page');
 });
 
 $(document).on('pageshow', '#top', function() {
-
+    $('#main li[name="hint2"]').css('visibility', 'hidden');
 });
 
 $(document).on('pageinit', '#main', function() {
     App.setGoal = function() {
-        App.homeNum = Math.floor(Math.random() * App.kyoto.length);
+        $('#main li[name="hint2"]').css('visibility', 'hidden');
 
-        for (var i = 0; i < App.arriveGoals.length; i++) {
-            if (App.homeNum == App.arriveGoals[i]['num']) {
+        /* ゴールの決定，ただし，すでに行った場所の場合，再決定する */
+        App.homeNum = Math.floor(Math.random() * App.kyoto.length);
+        while(1) {
+            if (App.homeNum in App.goalNums) {
                 App.homeNum = Math.floor(Math.random() * App.kyoto.length);
-                i = -1;
+            } else {
+                break;
             }
         }
 
-        if (typeof App.geoClient !== 'undefined') {
-            App.geoClient.clearWatchPosition();
-            // $('#main li[name="hint2"]').css('visibility', 'hidden');
-
-        } else {
-            App.geoClient = new GeoLocation();
-        }
-
+        App.geoClient = new GeoLocation();
         App.geoClient.watchCurrentPosition(function(pos) {
             var currentLat = pos.coords.latitude;
             var currentLong = pos.coords.longitude;
@@ -53,17 +49,19 @@ $(document).on('pageinit', '#main', function() {
                 App.kyoto[App.homeNum]['X'], App.kyoto[App.homeNum]['Y'],
                 currentLat, currentLong, PRECISION
             ));
+
             var direction = App.geoClient.getGeoDirection( // 方向
                 currentLat, currentLong,
                 App.kyoto[App.homeNum]['X'], App.kyoto[App.homeNum]['Y']
             );
 
-            /* TODO: このままでは条件を満たす度に毎回生成されるので対策を考える */
             if (distance <= 2000) {
                 $('#main li[name="hint2"]').css('visibility', 'visible');
+            } else {
+                $('#main li[name="hint2"]').css('visibility', 'hidden');
             }
 
-            if (App.distance <= 500) {
+            if (distance <= 500) {
                 App.geoClient.clearWatchPosition();
                 window.location.href = '#jump';
             }
@@ -123,6 +121,7 @@ $(document).on('pageinit', '#jump', function() {
             'photo': '',
             'day': ''
         });
+        App.goalNums.push(App.homeNum);
 
         var activity = new MozActivity({
             name: 'pick',
@@ -138,8 +137,7 @@ $(document).on('pageinit', '#jump', function() {
             $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
 
             var now = new Date();
-            var yobi= ["日","月","火","水","木","金","土"];
-            var day = now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影';
+            var day = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日撮影';
             App.arriveGoals[App.arriveGoals.length - 1]['day'] = day;
             $('#detailFootprint div[name="pictureDay"]')
                 .html('<p>' + day + '</p>');
@@ -155,35 +153,20 @@ $(document).on('pageinit', '#jump', function() {
 
 $(document).on('pageinit', '#goal', function() {
     // $('#titleDialog a[href="#footprints"]').on('click', function() {
-    //     // var activity = new MozActivity({
-    //     //     name: 'pick',
-    //     //     data: {
-    //     //         type: 'image/jpeg'
-    //     //     }
-    //     // });
 
-    //     activity.onsuccess = function() {
-    //         console.log('SUCCESS(activity): ', this.result);
-    //         var imgSrc = window.URL.createObjectURL(this.result.blob);
-    //         App.arriveGoals[App.arriveGoals.length - 1]['photo'] = imgSrc;
-    //         $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
-    //     };
-
-    //     activity.onerror = function() {
-    //         console.error('ERROR(activity):', this.error);
-    //     };
     // });
 
     console.log('Loaded Goal Page');
 });
 
 $(document).on('pageshow', '#goal', function() {
+    /* 写真データが存在していれば，その写真を使用する */
     if (App.kyoto[App.homeNum]['picture'] === '1') {
         $(this).find('div[name="placeImg"]')
             .html('<img src="imgs/arashiyama/' + App.kyoto[App.homeNum]['picture_pass'] + '.jpg" width="165px" height="180px">');
     } else {
         $(this).find('div[name="placeImg"]')
-            .html('<div width="165px" height="180px"><p>No Data</p></div>');
+            .html('<div width="165px" style="padding-bottom: 150px;"><p>No Data</p></div>');
     }
 
     $(this).find('div[name="placeName"]').html('<p>' + App.kyoto[App.homeNum]['goal'] + '</p>');
@@ -239,8 +222,8 @@ $(document).on('pageinit', '#detailFootprint', function() {
                     $('#detailFootprint div[name="placeImg"]').html('<img src="' + imgSrc + '" height="120">');
 
                     var now = new Date();
-                    var yobi= ["日","月","火","水","木","金","土"];
-                    var day = now.getFullyear() + '年' + (now.getMonth() + 1) + '月' + yobi[now.getDay()] + '日撮影';
+                    // var yobi = ["日","月","火","水","木","金","土"];
+                    var day = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日撮影';
                     App.arriveGoals[App.arriveGoals.length - 1]['day'] = day;
                     $('#detailFootprint div[name="pictureDay"]')
                         .html('<p>' + day + '</p>');
